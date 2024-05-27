@@ -154,7 +154,7 @@ def calculate_matched_score(removed_products, recommendations):
     append_line_to_file(f"Score: {score} ({match_count} matches out of {len(removed_products)} removed products)")
 
 def append_line_to_file(line):
-    with open('pearsonNeighbourhood2.txt', 'a') as file:  # 'a' opens the file in append mode
+    with open('pearsonNeighbourhood.txt', 'a') as file:  # 'a' opens the file in append mode
         file.write(line + "\n")  # Add newline character for the next line
 
 def main(num_neighbors, N = 5):

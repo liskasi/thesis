@@ -22,7 +22,7 @@ All algorithms already include testing that splits the dataset into training and
     - `svdBased.py`: SVD-based algorithm implementation.
 
 3. **Folder 3: Pearson**
-    - `neighbourhoodBased2.py`: kNN-based algorithm implementation.
+    - `neighbourhoodBased.py`: kNN-based algorithm implementation.
     - `svdBased.py`: SVD-based algorithm implementation.
 
 ### Baseline Algorithm
