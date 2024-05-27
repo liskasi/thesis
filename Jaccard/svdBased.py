@@ -50,8 +50,8 @@ def get_values(user_item_matrix, user_id, indices):
         values[i] = user_item_matrix[user_id, indices[i]]
     return values
 
+# Function to calculate jaccard similarity 
 def calculate_jaccard_similarity(args):
-    """Helper function to calculate Jaccard similarity between two users."""
     user_i, user_j, user_item_matrix = args
     # Ensure the matrix row slicing matches numpy array handling
     items_i = user_item_matrix[user_i] > 0
@@ -62,19 +62,8 @@ def calculate_jaccard_similarity(args):
     similarity = intersection / union if union != 0 else 0
     return user_i, user_j, similarity
 
-
+# Function to compute a custom similarity matrix using Jaccard similarity with parallel processing.
 def custom_similarity_matrix(user_item_matrix, num_neighbors, num_processes=None):
-    """
-    Compute a custom similarity matrix using Jaccard similarity with parallel processing.
-
-    Parameters:
-    user_item_matrix (csr_matrix): A sparse matrix where rows represent users and columns represent items.
-    num_neighbors (int): The number of top neighbors to retain for each user.
-    num_processes (int): The number of parallel processes to run. Default is None (use all available processors).
-
-    Returns:
-    csr_matrix: A sparse matrix with the top num_neighbors similarities for each user.
-    """
     num_users = user_item_matrix.shape[0]
     similarity_matrix = np.zeros((num_users, num_users))
 
@@ -167,7 +156,6 @@ def append_line_to_file(line):
 
 def main(num_neighbors, num_sing_val, num_recommendations = 5):
     start_time = time.time()
-    # print("Start", start_time)
     
     df = load_dataset()
 
@@ -176,10 +164,10 @@ def main(num_neighbors, num_sing_val, num_recommendations = 5):
 
     user_feature_matrix = get_reduced_user_matrix(user_item_matrix, num_sing_val)
 
-    cosine_sim = custom_similarity_matrix(user_feature_matrix, num_neighbors)
+    jaccard_sim = custom_similarity_matrix(user_feature_matrix, num_neighbors)
 
     mask_matrix = create_mask_matrix(user_item_matrix)
-    recommendation_matrix = create_recommendation_matrix(user_item_matrix, cosine_sim)
+    recommendation_matrix = create_recommendation_matrix(user_item_matrix, jaccard_sim)
     recommendation_matrix_new = apply_mask(recommendation_matrix, mask_matrix)
     recommendations = get_top_n_recommendations(recommendation_matrix_new, num_recommendations)
     calculate_matched_score(removed_products, recommendations)

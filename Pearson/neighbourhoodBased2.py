@@ -43,6 +43,7 @@ def apply_mask(recommendation_matrix, mask_matrix):
 def get_values(user_item_matrix, user_id, indices):
     return user_item_matrix[user_id, indices].toarray().flatten()
 
+# Function to calculate pearson similarity 
 def compute_chunk(chunk, user_item_matrix, num_users, num_neighbors):
     similarity_matrix_chunk = lil_matrix((num_users, num_users), dtype=np.float32)
     for i in chunk:
@@ -58,9 +59,6 @@ def compute_chunk(chunk, user_item_matrix, num_users, num_neighbors):
 
         for j in common_users:
             if i != j:
-                # Convert sparse matrix rows to dense arrays
-                # user_i_dense = user_item_matrix[i].toarray().flatten()
-                # user_j_dense = user_item_matrix[j].toarray().flatten()
                 similarity, _ = pearsonr(user_item_matrix[i], user_item_matrix[j])
                 user_similarities.append((similarity, j))
         
@@ -72,6 +70,7 @@ def compute_chunk(chunk, user_item_matrix, num_users, num_neighbors):
 
     return similarity_matrix_chunk
 
+# Function to calculate pearson similarity using parallel processing
 def custom_similarity_matrix(user_item_matrix, num_neighbors, num_processors = 8):
     num_users = user_item_matrix.shape[0]
 
@@ -160,17 +159,16 @@ def append_line_to_file(line):
 
 def main(num_neighbors, N = 5):
     start_time = time.time()
-    # print("Start", start_time)
 
     df = get_dataset()
     user_item_matrix = create_user_item_matrix(df)
 
     user_item_matrix, removed_products = remove_product_randomly(user_item_matrix)
 
-    cosine_sim = custom_similarity_matrix(user_item_matrix, num_neighbors)
+    pearson_sim = custom_similarity_matrix(user_item_matrix, num_neighbors)
 
     mask_matrix = create_mask_matrix(user_item_matrix)
-    recommendation_matrix = create_recommendation_matrix(user_item_matrix, cosine_sim)
+    recommendation_matrix = create_recommendation_matrix(user_item_matrix, pearson_sim)
     recommendation_matrix_new = apply_mask(recommendation_matrix, mask_matrix)
     recommendations = get_top_N_recommendations(recommendation_matrix_new, N)
 

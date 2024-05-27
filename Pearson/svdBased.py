@@ -51,24 +51,14 @@ def get_values(user_item_matrix, user_id, indices):
         values[i] = user_item_matrix[user_id, indices[i]]
     return values
 
+# Function to calculate Pearson correlation between two user
 def calculate_similarity(args):
-    """Helper function to calculate Pearson correlation between two users."""
     user_i, user_j, user_item_matrix = args
     similarity, _ = pearsonr(user_item_matrix[user_i], user_item_matrix[user_j])
     return user_i, user_j, similarity
 
+# Function to compute a custom similarity matrix using Pearson correlation with parallel processing.
 def custom_similarity_matrix(user_item_matrix, num_neighbors, num_processes=None):
-    """
-    Compute a custom similarity matrix using Pearson correlation with parallel processing.
-
-    Parameters:
-    user_item_matrix (ndarray): A 2D array where rows represent users and columns represent items.
-    num_neighbors (int): The number of top neighbors to retain for each user.
-    num_processes (int): The number of parallel processes to run. Default is None (use all available processors).
-
-    Returns:
-    csr_matrix: A sparse matrix with the top num_neighbors similarities for each user.
-    """
     num_users = user_item_matrix.shape[0]
     similarity_matrix = np.zeros((num_users, num_users))
 
@@ -166,10 +156,10 @@ def main(num_neighbors, num_sing_val, num_recommendations = 5):
 
     user_feature_matrix = get_reduced_user_matrix(user_item_matrix, num_sing_val)
 
-    cosine_sim = custom_similarity_matrix(user_feature_matrix, num_neighbors)
+    pearson_sim = custom_similarity_matrix(user_feature_matrix, num_neighbors)
 
     mask_matrix = create_mask_matrix(user_item_matrix)
-    recommendation_matrix = create_recommendation_matrix(user_item_matrix, cosine_sim)
+    recommendation_matrix = create_recommendation_matrix(user_item_matrix, pearson_sim)
     recommendation_matrix_new = apply_mask(recommendation_matrix, mask_matrix)
     recommendations = get_top_n_recommendations(recommendation_matrix_new, num_recommendations)
     calculate_matched_score(removed_products, recommendations)
@@ -179,16 +169,15 @@ def main(num_neighbors, num_sing_val, num_recommendations = 5):
     print("Elapsed time:", elapsed_time, "seconds")
 
 if __name__ == '__main__':
-    main(10, 5)
-    # num_neighbors = [10, 20, 50, 94, 150, 200]
-    # num_recommendations = [5]
-    # num_sing_val = [5, 10, 50, 125, 250, 514]
+    num_neighbors = [10, 20, 50, 94, 150, 200]
+    num_recommendations = [5]
+    num_sing_val = [5, 10, 50, 125, 250, 514]
 
-    # for i in num_neighbors:
-    #     for j in num_sing_val:
-    #         print("Number of similar users =", i, ", Number of singular values = ", j)
-    #         main(i, j)
-    #         main(i, j)
-    #         main(i, j)
-    #         main(i, j)
-    #         main(i, j)
+    for i in num_neighbors:
+        for j in num_sing_val:
+            print("Number of similar users =", i, ", Number of singular values = ", j)
+            main(i, j)
+            main(i, j)
+            main(i, j)
+            main(i, j)
+            main(i, j)

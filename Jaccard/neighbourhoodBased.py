@@ -100,9 +100,6 @@ def custom_similarity_matrix(user_item_matrix, num_neighbors, num_processors = 8
     return similarity_matrix.tocsr()
 
 def create_recommendation_matrix(user_item_matrix_csr, similarity_matrix_csr):    
-    # user_item_matrix_csr = user_item_matrix.tocsr()
-    # similarity_matrix_csr = similarity_matrix.tocsr()
-
     recommendation_matrix = similarity_matrix_csr.dot(user_item_matrix_csr)
     
     # Normalize recommendations by the sum of absolute similarities for each user
@@ -172,16 +169,15 @@ def append_line_to_file(line):
 
 def main(num_neighbors, N=5):
     start_time = time.time()
-    # print("Start", start_time)
 
     df = get_dataset()
     user_item_matrix = create_user_item_matrix(df)
 
     user_item_matrix, removed_products = remove_product_randomly(user_item_matrix)
 
-    cosine_sim = custom_similarity_matrix(user_item_matrix, num_neighbors)
+    jaccard_sim = custom_similarity_matrix(user_item_matrix, num_neighbors)
     mask_matrix = create_mask_matrix(user_item_matrix)
-    recommendation_matrix = create_recommendation_matrix(user_item_matrix, cosine_sim)
+    recommendation_matrix = create_recommendation_matrix(user_item_matrix, jaccard_sim)
     recommendation_matrix_new = apply_mask(recommendation_matrix, mask_matrix)
     recommendations = get_top_n_recommendations(recommendation_matrix_new, N)
 
@@ -192,14 +188,5 @@ def main(num_neighbors, N=5):
     print("Elapsed time:", elapsed_time, "seconds")
 
 if __name__ == '__main__':
-    num_sim_users = [10]
-    num_recommendations = [5]
+    main(10, 5)
 
-    for i in num_sim_users:
-        for j in num_recommendations:
-            append_line_to_file(f"Number of similar users = {i}, Recommendations = {j}")
-            main(i, j)
-            main(i, j)
-            # main(i, j)
-            # main(i, j)
-            # main(i, j)
