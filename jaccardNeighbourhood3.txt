@@ -1,0 +1,3 @@
+Number of similar users = 10, Recommendations = 5
+Score: 0.24390243902439024 (50 matches out of 205 removed products)
+Score: 0.24878048780487805 (51 matches out of 205 removed products)

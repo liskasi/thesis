@@ -1,0 +1,1 @@
+Number of similar users = 150, Number of singular values = 50

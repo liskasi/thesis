@@ -1,0 +1,2 @@
+Number of similar users = 94, Number of singular values = 125
+Score: 0.3121951219512195 (64 matches out of 205 removed products)

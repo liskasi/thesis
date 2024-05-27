@@ -1,0 +1,1 @@
+Number of similar users = 10, Recommendations = 5

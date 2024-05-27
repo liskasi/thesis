@@ -1,0 +1,7 @@
+Number of similar users = 150, Number of singular values = 50
+Score: 0.32682926829268294 (67 matches out of 205 removed products)
+Score: 0.23414634146341465 (48 matches out of 205 removed products)
+Score: 0.3073170731707317 (63 matches out of 205 removed products)
+Score: 0.2780487804878049 (57 matches out of 205 removed products)
+Number of similar users = 94, Number of singular values = 125
+Score: 0.2926829268292683 (60 matches out of 205 removed products)
